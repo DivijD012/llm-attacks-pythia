@@ -182,7 +182,7 @@ def target_loss(logits, ids, target_slice):
     return loss.mean(dim=-1)
 
 
-def load_model_and_tokenizer(model_path, tokenizer_path=None, device='cuda:0', **kwargs):
+def load_model_and_tokenizer(tokenizer_path=None, device='cuda:0', **kwargs):
     model = AutoModelForCausalLM.from_pretrained(
             "EleutherAI/pythia-1b",
             torch_dtype=torch.float16,
@@ -191,9 +191,7 @@ def load_model_and_tokenizer(model_path, tokenizer_path=None, device='cuda:0', *
             use_cache=False,
             **kwargs
         ).to(device).eval()
-    
-    tokenizer_path = model_path if tokenizer_path is None else tokenizer_path
-    
+        
     tokenizer = AutoTokenizer.from_pretrained(
         "EleutherAI/pythia-1b",
         trust_remote_code=True,
