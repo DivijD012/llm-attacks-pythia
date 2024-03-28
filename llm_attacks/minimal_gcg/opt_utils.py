@@ -184,16 +184,18 @@ def target_loss(logits, ids, target_slice):
 
 def load_model_and_tokenizer(model_path, tokenizer_path=None, device='cuda:0', **kwargs):
     model = AutoModelForCausalLM.from_pretrained(
-            model_path,
+            "EleutherAI/pythia-1b",
             torch_dtype=torch.float16,
             trust_remote_code=True,
+            low_cpu_mem_usage=True,
+            use_cache=False,
             **kwargs
         ).to(device).eval()
     
     tokenizer_path = model_path if tokenizer_path is None else tokenizer_path
     
     tokenizer = AutoTokenizer.from_pretrained(
-        tokenizer_path,
+        "EleutherAI/pythia-1b",
         trust_remote_code=True,
         use_fast=False
     )
@@ -204,7 +206,8 @@ def load_model_and_tokenizer(model_path, tokenizer_path=None, device='cuda:0', *
     if 'guanaco' in tokenizer_path:
         tokenizer.eos_token_id = 2
         tokenizer.unk_token_id = 0
-    if 'llama-2' in tokenizer_path:
+    if 'llama-2' or 'pythia' in tokenizer_path:
+        print("ENTERED HERE 1")
         tokenizer.pad_token = tokenizer.unk_token
         tokenizer.padding_side = 'left'
     if 'falcon' in tokenizer_path:

@@ -34,6 +34,7 @@ def get_embedding_layer(model):
     elif isinstance(model, LlamaForCausalLM):
         return model.model.embed_tokens
     elif isinstance(model, GPTNeoXForCausalLM):
+        print("ENTERED HERE 3")
         return model.base_model.embed_in
     else:
         raise ValueError(f"Unknown model type: {type(model)}")
