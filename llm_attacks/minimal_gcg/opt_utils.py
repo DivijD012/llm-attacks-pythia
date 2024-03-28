@@ -192,6 +192,9 @@ def load_model_and_tokenizer(tokenizer_path=None, device='cuda:0', **kwargs):
             **kwargs
         ).to(device).eval()
         
+
+    tokenizer_path = "EleutherAI/pythia-1b"
+
     tokenizer = AutoTokenizer.from_pretrained(
         "EleutherAI/pythia-1b",
         trust_remote_code=True,
