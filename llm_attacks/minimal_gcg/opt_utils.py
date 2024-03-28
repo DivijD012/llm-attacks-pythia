@@ -195,7 +195,7 @@ def load_model_and_tokenizer(tokenizer_path=None, device='cuda:0', **kwargs):
     tokenizer = AutoTokenizer.from_pretrained(
         "EleutherAI/pythia-1b",
         trust_remote_code=True,
-        use_fast=False
+        use_fast=True
     )
     
     if 'oasst-sft-6-llama-30b' in tokenizer_path:
