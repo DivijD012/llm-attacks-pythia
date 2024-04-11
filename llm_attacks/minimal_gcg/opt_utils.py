@@ -95,6 +95,7 @@ def sample_control(control_toks, grad, batch_size, topk=256, temp=1, not_allowed
 
 def get_filtered_cands(tokenizer, control_cand, filter_cand=True, curr_control=None):
     cands, count = [], 0
+    print("Control Cands length", control_cand.shape[0])
     for i in range(control_cand.shape[0]):
         decoded_str = tokenizer.decode(control_cand[i], skip_special_tokens=True)
         if filter_cand:
@@ -106,7 +107,7 @@ def get_filtered_cands(tokenizer, control_cand, filter_cand=True, curr_control=N
             cands.append(decoded_str)
 
     if filter_cand:
-        print(cands)
+        print("Cands", cands)
         cands = cands + [cands[-1]] * (len(control_cand) - len(cands))
         # print(f"Warning: {round(count / len(control_cand), 2)} control candidates were not valid")
     return cands
