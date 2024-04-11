@@ -95,14 +95,14 @@ def sample_control(control_toks, grad, batch_size, topk=256, temp=1, not_allowed
 
 def get_filtered_cands(tokenizer, control_cand, filter_cand=True, curr_control=None):
     cands, count = [], 0
-    print("Control Cands length", control_cand.shape[0])
+    # print("Control Cands length", control_cand.shape[0])
     for i in range(control_cand.shape[0]):
         decoded_str = tokenizer.decode(control_cand[i], skip_special_tokens=False)
         if filter_cand:
-            print("Curr Control", curr_control)
-            print("Decoded Str", decoded_str)
-            print("Control Cand", control_cand[i])
-            print("Length", len(tokenizer(decoded_str, add_special_tokens=True).input_ids))
+            # print("Curr Control", curr_control)
+            # print("Decoded Str", decoded_str)
+            # print("Control Cand", control_cand[i])
+            # print("Length", len(tokenizer(decoded_str, add_special_tokens=True).input_ids))
             # if decoded_str != curr_control and len(tokenizer(decoded_str, add_special_tokens=True).input_ids) == len(control_cand[i]):
             if decoded_str != curr_control:
                 cands.append(decoded_str)
@@ -111,21 +111,20 @@ def get_filtered_cands(tokenizer, control_cand, filter_cand=True, curr_control=N
         else:
             cands.append(decoded_str)
 
-    print("Count", count)
+    # print("Count", count)
     if filter_cand:
-        print("Cands", cands)
+        # print("Cands", cands)
         cands = cands + [cands[-1]] * (len(control_cand) - len(cands))
         # print(f"Warning: {round(count / len(control_cand), 2)} control candidates were not valid")
     return cands
 
 
 def get_logits(*, model, tokenizer, input_ids, control_slice, test_controls=None, return_ids=False, batch_size=512):
-    
-    if isinstance(test_controls[0], str):
-        if(control_slice.stop is None or control_slice.start is None):
-            max_len = min([len(tokenizer(control, add_special_tokens=False).input_ids) for control in test_controls])
-        else:
-            max_len = control_slice.stop - control_slice.start
+    if(control_slice.stop is None or control_slice.start is None):
+        max_len = min([len(tokenizer(control, add_special_tokens=False).input_ids) for control in test_controls])
+    else:
+        max_len = control_slice.stop - control_slice.start
+    if isinstance(test_controls[0], str):    
         test_ids = [
             torch.tensor(tokenizer(control, add_special_tokens=False).input_ids[:max_len], device=model.device)
             for control in test_controls
@@ -138,10 +137,10 @@ def get_logits(*, model, tokenizer, input_ids, control_slice, test_controls=None
     else:
         raise ValueError(f"test_controls must be a list of strings, got {type(test_controls)}")
 
-    if not(test_ids[0].shape[0] == control_slice.stop - control_slice.start):
+    if not(test_ids[0].shape[0] == max_len):
         raise ValueError((
             f"test_controls must have shape "
-            f"(n, {control_slice.stop - control_slice.start}), " 
+            f"(n, {max_len}), " 
             f"got {test_ids.shape}"
         ))
 
