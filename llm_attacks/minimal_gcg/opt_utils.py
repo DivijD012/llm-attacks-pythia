@@ -97,13 +97,13 @@ def get_filtered_cands(tokenizer, control_cand, filter_cand=True, curr_control=N
     cands, count = [], 0
     print("Control Cands length", control_cand.shape[0])
     for i in range(control_cand.shape[0]):
-        decoded_str = tokenizer.decode(control_cand[i], skip_special_tokens=True)
+        decoded_str = tokenizer.decode(control_cand[i], skip_special_tokens=False)
         if filter_cand:
             print("Curr Control", curr_control)
             print("Decoded Str", decoded_str)
             print("Control Cand", control_cand[i])
-            print("Length", len(tokenizer(decoded_str, add_special_tokens=False).input_ids))
-            if decoded_str != curr_control and len(tokenizer(decoded_str, add_special_tokens=False).input_ids) == len(control_cand[i]):
+            print("Length", len(tokenizer(decoded_str, add_special_tokens=True).input_ids))
+            if decoded_str != curr_control and len(tokenizer(decoded_str, add_special_tokens=True).input_ids) == len(control_cand[i]):
                 cands.append(decoded_str)
             else:
                 count += 1
