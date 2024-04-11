@@ -103,7 +103,8 @@ def get_filtered_cands(tokenizer, control_cand, filter_cand=True, curr_control=N
             print("Decoded Str", decoded_str)
             print("Control Cand", control_cand[i])
             print("Length", len(tokenizer(decoded_str, add_special_tokens=True).input_ids))
-            if decoded_str != curr_control and len(tokenizer(decoded_str, add_special_tokens=True).input_ids) == len(control_cand[i]):
+            # if decoded_str != curr_control and len(tokenizer(decoded_str, add_special_tokens=True).input_ids) == len(control_cand[i]):
+            if decoded_str != curr_control:
                 cands.append(decoded_str)
             else:
                 count += 1
