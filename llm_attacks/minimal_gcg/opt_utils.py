@@ -144,7 +144,7 @@ def get_logits(*, model, tokenizer, input_ids, control_slice, test_controls=None
             f"got {test_ids.shape}"
         ))
 
-    locs = torch.arange(control_slice.start, control_slice.stop).repeat(test_ids.shape[0], 1).to(model.device)
+    locs = torch.arange(max_len).repeat(test_ids.shape[0], 1).to(model.device)
     ids = torch.scatter(
         input_ids.unsqueeze(0).repeat(test_ids.shape[0], 1).to(model.device),
         1,
