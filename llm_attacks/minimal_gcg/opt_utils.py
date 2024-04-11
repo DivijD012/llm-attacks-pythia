@@ -122,7 +122,10 @@ def get_filtered_cands(tokenizer, control_cand, filter_cand=True, curr_control=N
 def get_logits(*, model, tokenizer, input_ids, control_slice, test_controls=None, return_ids=False, batch_size=512):
     
     if isinstance(test_controls[0], str):
-        max_len = control_slice.stop - control_slice.start
+        if(control_slice.stop is None or control_slice.start is None):
+            max_len = min([len(tokenizer(control, add_special_tokens=False).input_ids) for control in test_controls])
+        else:
+            max_len = control_slice.stop - control_slice.start
         test_ids = [
             torch.tensor(tokenizer(control, add_special_tokens=False).input_ids[:max_len], device=model.device)
             for control in test_controls
